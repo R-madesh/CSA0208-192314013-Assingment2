@@ -1,0 +1,61 @@
+ 
+#include <stdio.h>
+
+#define FREE_LIMIT 100
+#define SLAB_LIMIT 200
+#define RATE_1 225LL
+#define RATE_2 450LL
+#define FIXED_CHARGE 5000LL
+
+int main(void)
+{
+    unsigned long previous, current, units;
+    long long bill;
+ 
+    if (scanf("%lu", &previous) != 1)
+    {
+        printf("Invalid input!\n");
+        return 1;
+    }
+ 
+    if (scanf("%lu", &current) != 1)
+    {
+        printf("Invalid input!\n");
+        return 1;
+    }
+
+    if (previous > 65535 || current > 65535)
+    {
+        printf("Invalid meter reading!\n");
+        return 1;
+    }
+
+    if (current >= previous)
+        units = current - previous;
+    else if (current == 0)
+        units = 65536UL - previous;
+    else
+    {
+        printf("Invalid meter rollover!\n");
+        return 1;
+    }
+
+    if (units <= FREE_LIMIT)
+        bill = FIXED_CHARGE;
+    else if (units <= SLAB_LIMIT)
+        bill = FIXED_CHARGE +
+               (long long)(units - FREE_LIMIT) * RATE_1;
+    else
+        bill = FIXED_CHARGE +
+               100LL * RATE_1 +
+               (long long)(units - SLAB_LIMIT) * RATE_2;
+
+    printf("\n--- ELECTRICITY BILL ---\n");
+    printf("Previous reading: %lu\n", previous);
+    printf("Current reading : %lu\n", current);
+    printf("Units consumed  : %lu\n", units);
+    printf("Total bill      : Rs %lld.%02lld\n",
+           bill / 100, bill % 100);
+
+    return 0;
+}
