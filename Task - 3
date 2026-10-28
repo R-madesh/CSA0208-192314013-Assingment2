@@ -1,0 +1,51 @@
+ 
+#include <stdio.h>
+
+#define FREE_LIMIT 100UL
+#define SLAB_LIMIT 200UL
+#define RATE_1 225LL
+#define RATE_2 450LL
+#define FIXED_CHARGE 5000LL
+
+int main(void)
+{
+    unsigned long units;
+    long long bill;
+ 
+
+    if (scanf("%lu", &units) != 1)
+    {
+        printf("Invalid input!\n");
+        return 1;
+    }
+
+    if (units > 1000000UL)
+    {
+        printf("Units exceed the allowed limit!\n");
+        return 1;
+    }
+
+    if (units <= FREE_LIMIT)
+    {
+        bill = FIXED_CHARGE;
+    }
+    else if (units <= SLAB_LIMIT)
+    {
+        bill = FIXED_CHARGE +
+               (long long)(units - FREE_LIMIT) * RATE_1;
+    }
+    else
+    {
+        bill = FIXED_CHARGE +
+               100LL * RATE_1 +
+               (long long)(units - SLAB_LIMIT) * RATE_2;
+    }
+
+    printf("\n--- ELECTRICITY BILL ---\n");
+    printf("Units consumed: %lu\n", units);
+    printf("Bill in paise : %lld\n", bill);
+    printf("Total bill    : Rs %lld.%02lld\n",
+           bill / 100, bill % 100);
+
+    return 0;
+}
